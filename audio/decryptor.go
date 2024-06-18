@@ -28,7 +28,7 @@ func (a *Decryptor) ReadAt(p []byte, pos int64) (n int, err error) {
 	bs := int64(a.cipher.BlockSize())
 	block, off := int(pos/bs), int(pos%bs)
 
-	newIv := bytes.Clone(baseIv)
+	newIv := bytes.NewBuffer(baseIv).Bytes()
 	for j := 0; j < block; j++ {
 		for i := len(newIv) - 1; i >= 0; i-- {
 			newIv[i]++

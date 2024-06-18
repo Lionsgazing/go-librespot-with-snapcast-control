@@ -2,7 +2,6 @@ package player
 
 import (
 	"fmt"
-	log "github.com/sirupsen/logrus"
 	librespot "go-librespot"
 	"go-librespot/audio"
 	"go-librespot/output"
@@ -10,7 +9,10 @@ import (
 	"go-librespot/proto/spotify/metadata"
 	"go-librespot/spclient"
 	"go-librespot/vorbis"
+	"math"
 	"time"
+
+	log "github.com/sirupsen/logrus"
 )
 
 const SampleRate = 44100
@@ -417,7 +419,7 @@ func (p *Player) NewStream(spotId librespot.SpotifyId, bitrate int, mediaPositio
 		return nil, fmt.Errorf("unsupported channels: %d", stream.Channels)
 	}
 
-	if err := stream.SetPositionMs(max(0, min(mediaPosition, int64(media.Duration())))); err != nil {
+	if err := stream.SetPositionMs(int64(math.Max(float64(0), float64(math.Min(float64(mediaPosition), float64(int64(media.Duration()))))))); err != nil {
 		return nil, fmt.Errorf("failed seeking stream: %w", err)
 	}
 

@@ -2,16 +2,18 @@ package audio
 
 import (
 	"fmt"
-	"github.com/cenkalti/backoff/v4"
-	log "github.com/sirupsen/logrus"
 	librespot "go-librespot"
 	"io"
+	"math"
 	"net/http"
 	"net/url"
 	"regexp"
 	"strconv"
 	"sync"
 	"time"
+
+	"github.com/cenkalti/backoff/v4"
+	log "github.com/sirupsen/logrus"
 )
 
 const (
@@ -227,7 +229,8 @@ func (r *HttpChunkedReader) ReadAt(p []byte, pos int64) (n int, _ error) {
 		}
 
 		// read the chunk data
-		c := chunk[min(off, len(chunk)):]
+
+		c := chunk[int(math.Min(float64(off), float64(len(chunk)))):]
 		if len(c) > len(p) {
 			// the chunk is bigger than our output buffer, just copy everything and return
 			n += copy(p, c[:len(p)])

@@ -2,6 +2,7 @@ package player
 
 import (
 	"errors"
+	"fmt"
 	librespot "go-librespot"
 	"io"
 	"sync"
@@ -102,10 +103,10 @@ func (s *SwitchingAudioSource) PositionMs() int64 {
 func (s *SwitchingAudioSource) Close() error {
 	var err error
 	if source, ok := s.source[true].(io.Closer); ok && source != nil {
-		err = errors.Join(err, source.Close())
+		err = fmt.Errorf("%w; %w", err, source.Close())
 	}
 	if source, ok := s.source[false].(io.Closer); ok && source != nil {
-		err = errors.Join(err, source.Close())
+		err = fmt.Errorf("%w; %w", err, source.Close())
 	}
 	return err
 }

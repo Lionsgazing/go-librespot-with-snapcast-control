@@ -3,17 +3,32 @@ package main
 import (
 	"errors"
 	"fmt"
-	log "github.com/sirupsen/logrus"
 	librespot "go-librespot"
 	"go-librespot/player"
 	connectpb "go-librespot/proto/spotify/connectstate"
 	playerpb "go-librespot/proto/spotify/player"
 	"go-librespot/tracks"
-	"google.golang.org/protobuf/proto"
 	"math"
 	"strconv"
 	"time"
+
+	log "github.com/sirupsen/logrus"
+	"google.golang.org/protobuf/proto"
 )
+
+func min(a, b int64) int64 {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+func max(a, b int64) int64 {
+	if a > b {
+		return a
+	}
+	return b
+}
 
 func (p *AppPlayer) prefetchNext() {
 	next := p.state.tracks.PeekNext()
